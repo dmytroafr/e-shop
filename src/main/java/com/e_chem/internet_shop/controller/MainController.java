@@ -19,11 +19,6 @@ public class MainController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping("/login")
-    public String login(){
-        return "login";
-    }
-
     @RequestMapping("/users")
     public List<User> userList (){
         return userRepository.findAll();

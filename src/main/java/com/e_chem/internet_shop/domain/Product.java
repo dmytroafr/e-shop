@@ -13,15 +13,18 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String unit;
 
+    @Column(nullable = false)
     private String photoUrl;
 
+    @Column(nullable = false)
     private String producer;
 
+    @Column(nullable = false)
     private String countryOrigin;
-
-
 }
