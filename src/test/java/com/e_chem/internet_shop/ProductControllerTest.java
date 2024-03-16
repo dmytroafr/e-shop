@@ -1,34 +1,42 @@
 package com.e_chem.internet_shop;
 
-import com.e_chem.internet_shop.controller.ProductController;
-import com.e_chem.internet_shop.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
+import com.e_chem.internet_shop.domain.Product;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+import static org.assertj.core.api.Assertions.assertThat;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductControllerTest {
-    @Mock
-    ProductService productService;
-    @InjectMocks
-    ProductController productController;
 
-    private MockMvc mockMvc;
-    @BeforeEach
-    void setUp (){
-        mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+    @Test
+    @Order(1)
+    void returnProductById() {
+        ResponseEntity<Product> responseEntity = restTemplate.getForEntity("/products/1",Product.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody().getId()).isEqualTo(1);
     }
     @Test
-    void getRequestOnProducts() throws Exception {
-        mockMvc.perform(get("/products")).andExpect(status().isOk());
+    @Order(2)
+    void shouldReturnNothingForUnknownId(){
+        ResponseEntity<Product> response = restTemplate.getForEntity("/products/1000", Product.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNull();
+    }
+    @Test
+    @Order(3)
+    void returnProducts() {
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/products",String.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 

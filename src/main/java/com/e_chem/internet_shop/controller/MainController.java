@@ -1,6 +1,7 @@
 package com.e_chem.internet_shop.controller;
 
 import com.e_chem.internet_shop.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,13 +19,13 @@ public class MainController {
     }
 
     @GetMapping({"/","","/{name}"})
-    @ResponseBody
-    public String hello(@PathVariable(required = false) String name){
+    public ResponseEntity<String> hello(@PathVariable(required = false) String name){
         String defaultName = "Guest";
         if (name!=null) {
             defaultName = name;
         }
-        return "Hello, " + defaultName;
+        String out = "Hello, " + defaultName;
+        return ResponseEntity.ok(out);
     }
 
 

@@ -6,6 +6,7 @@ import com.e_chem.internet_shop.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,5 +37,9 @@ public class ProductService {
 //        product1.setBrand(product.getBrand());
 
         return productRepository.save(product);
+    }
+
+    public Optional<Product> getById(Long id) {
+        return productRepository.findById(id);
     }
 }

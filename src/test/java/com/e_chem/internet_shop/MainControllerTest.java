@@ -1,35 +1,24 @@
 package com.e_chem.internet_shop;
 
-import com.e_chem.internet_shop.controller.MainController;
-import com.e_chem.internet_shop.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-@ExtendWith(MockitoExtension.class)
+import static org.assertj.core.api.Assertions.assertThat;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MainControllerTest {
-
-    @InjectMocks
-    MainController mainController;
-
-    private MockMvc mockMvc;
-    @BeforeEach
-    void setUp (){
-        mockMvc = MockMvcBuilders.standaloneSetup(mainController).build();
-    }
+    @Autowired
+    private TestRestTemplate restTemplate;
     @Test
-    void startPageWithoutPath() throws Exception {
-        mockMvc.perform(get("")).andExpect(status().isOk());
+    @Order(1)
+    void returnMain() {
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/",String.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
-    @Test
-    void startPageWithPath() throws Exception {
-        mockMvc.perform(get("/")).andExpect(status().isOk());
-    }
+
+
 }
