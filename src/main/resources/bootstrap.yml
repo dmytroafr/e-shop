@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: eshop
+  cloud:
+    config:
+      uri: http://91.218.194.66:8888

@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(nullable = false)
@@ -35,10 +35,17 @@ public class User{
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Embedded
-    private Address address;
     @ElementCollection
-    @CollectionTable(name = "user_phones", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(
+            name = "user_addresses",
+            joinColumns = @JoinColumn(name = "user_id"),
+            foreignKey = @ForeignKey(name = "user_address_fk"))
+    private List<Address> address;
+    @ElementCollection
+    @CollectionTable(
+            name = "user_phones",
+            joinColumns = @JoinColumn(name = "user_id"),
+            foreignKey = @ForeignKey(name = "user_phone_fk"))
     private List<PhoneNumber> phoneNumberList = new ArrayList<>();
 
     private LocalDateTime created = LocalDateTime.now();

@@ -1,9 +1,11 @@
 package com.e_chem.internet_shop.dto;
 
-public record ProductDto(Long id,
-                         String title,
-                         String unit,
-                         String photoUrl,
-                         String producer,
-                         String countryOrigin) {
+import jakarta.persistence.Column;
+
+public record ProductDto(
+        Long id,
+        String title,
+        String description,
+        String image_link,
+        String brand) {
 }

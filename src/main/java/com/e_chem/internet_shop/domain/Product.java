@@ -3,28 +3,18 @@ package com.e_chem.internet_shop.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter @Setter
+@ToString
 @Entity
 @Table(name = "products")
-@Getter @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
+    @SequenceGenerator(name = "products_seq", sequenceName = "products_seq", allocationSize = 1)
     private Long id;
-
     @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
-    private String unit;
-
-    @Column(nullable = false)
-    private String photoUrl;
-
-    @Column(nullable = false)
-    private String producer;
-
-    @Column(nullable = false)
-    private String countryOrigin;
+    private String description;
+    private String image_link;
+    private String brand;
 }
