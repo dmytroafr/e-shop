@@ -16,7 +16,9 @@ public class MainControllerTest {
     @Test
     @Order(1)
     void returnMain() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/",String.class);
+        ResponseEntity<String> responseEntity = restTemplate
+                .withBasicAuth("admin","admin")
+                .getForEntity("/",String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

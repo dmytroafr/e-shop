@@ -3,6 +3,9 @@ package com.e_chem.internet_shop.service;
 import com.e_chem.internet_shop.domain.Product;
 import com.e_chem.internet_shop.dto.ProductDto;
 import com.e_chem.internet_shop.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,18 +31,14 @@ public class ProductService {
     }
 
     public Product saveNewProduct(Product product) {
-
-//        Product product1 = new Product();
-//        product1.setBrand(product.getBrand());
-//        product1.setTitle(product.getTitle());
-//        product1.setImage_link(product.getImage_link());
-//        product1.setDescription(product.getDescription());
-//        product1.setBrand(product.getBrand());
-
         return productRepository.save(product);
     }
 
     public Optional<Product> getById(Long id) {
         return productRepository.findById(id);
+    }
+
+    public Page<Product> findAllByPage(Pageable pageable) {
+        return productRepository.findAll(PageRequest.of(pageable.getPageNumber(),pageable.getPageSize()));
     }
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -17,7 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 public class User{
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
+    @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)
@@ -40,7 +42,8 @@ public class User{
             name = "user_addresses",
             joinColumns = @JoinColumn(name = "user_id"),
             foreignKey = @ForeignKey(name = "user_address_fk"))
-    private List<Address> address;
+    private Set<Address> address;
+
     @ElementCollection
     @CollectionTable(
             name = "user_phones",
@@ -49,7 +52,5 @@ public class User{
     private List<PhoneNumber> phoneNumberList = new ArrayList<>();
 
     private LocalDateTime created = LocalDateTime.now();
-    enum Role{
-        ADMIN, GUEST, CLIENT, MANAGER;
-    }
+
 }

@@ -18,20 +18,35 @@ class InternetShopApplicationTests {
     @Test
     @Order(1)
     void returnMain() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/",String.class);
+        ResponseEntity<String> responseEntity = restTemplate
+                .withBasicAuth("admin","admin")
+                .getForEntity("/",String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
     @Test
     @Order(2)
     void returnProduct() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/products/1",String.class);
+        ResponseEntity<String> responseEntity = restTemplate
+                .withBasicAuth("admin","admin")
+                .getForEntity("/products/1",String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
     @Test
     @Order(3)
     void returnProducts() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/products",String.class);
+        ResponseEntity<String> responseEntity = restTemplate
+                .withBasicAuth("admin","admin")
+                .getForEntity("/products",String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Order(4)
+    void shouldNotReturnProductsWithoutOuth(){
+        ResponseEntity<Void> response = restTemplate.getForEntity("/", Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
     }
 
 

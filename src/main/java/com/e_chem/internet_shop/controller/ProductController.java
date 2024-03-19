@@ -3,8 +3,12 @@ package com.e_chem.internet_shop.controller;
 import com.e_chem.internet_shop.domain.Product;
 import com.e_chem.internet_shop.dto.ProductDto;
 import com.e_chem.internet_shop.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -17,9 +21,14 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+//    @GetMapping
+//    public ResponseEntity<List<ProductDto>> getAllProducts(){
+//        return ResponseEntity.ok(productService.getAllProducts());
+//    }
     @GetMapping
-    public ResponseEntity<Iterable<ProductDto>> getAllProducts(){
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<Product>> findAllByPage(Pageable pageable){
+        Page<Product> page = productService.findAllByPage(pageable);
+        return ResponseEntity.ok(page.getContent());
     }
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id){
@@ -29,10 +38,14 @@ public class ProductController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PostMapping()
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        Product product1 = productService.saveNewProduct(product);
+    public ResponseEntity<Void> addProduct(@RequestBody Product product, UriComponentsBuilder ucb) {
+        Product savedProduct = productService.saveNewProduct(product);
+        URI location = ucb
+                .path("/products/{id}")
+                .buildAndExpand(savedProduct.getId())
+                .toUri();
         return ResponseEntity
-                .created(URI.create("/products/)" + product1.getId()))
-                .body(product1);
+                .created(location)
+                .build();
     }
 }
