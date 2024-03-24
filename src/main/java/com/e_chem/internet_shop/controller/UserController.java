@@ -2,7 +2,6 @@ package com.e_chem.internet_shop.controller;
 
 import com.e_chem.internet_shop.domain.User;
 import com.e_chem.internet_shop.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +10,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -40,19 +38,15 @@ public class UserController {
     @GetMapping("/my")
     public ResponseEntity<User> getPrincipalInf (Principal principal){
         String name = principal.getName();
-        Optional<User> optionalUser = userService.findByFirstName(name);
-        if (optionalUser.isEmpty()){
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(new User());
-        }
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(userService.findByFirstName(name).get());
+                .body(userService.findByFirstName(name).orElseThrow());
     }
 
     @PostMapping("/new")
     public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder ucb){
-        User newUser = userService.createNewUser(user);
+        User newUser = userService.save(user);
         URI location = ucb
                 .path("/users/{id}")
                 .buildAndExpand(newUser.getId())
@@ -61,5 +55,20 @@ public class UserController {
                 .build();
     }
 
+    @PutMapping("/{requestedId}")
+    public ResponseEntity<Void> putUser (@PathVariable Long requestedId, @RequestBody User user){
+        Optional<User> byId = userService.findById(requestedId);
+        if (byId.isPresent()){
+            User user1 = byId.get();
+
+            user.setId(user1.getId());
+//            user1.setLastName(user.getLastName());
+//   how to merge entities
+
+            userService.save(user);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 }

@@ -41,4 +41,8 @@ public class ProductService {
     public Page<Product> findAllByPage(Pageable pageable) {
         return productRepository.findAll(PageRequest.of(pageable.getPageNumber(),pageable.getPageSize()));
     }
+
+    public void delete (Long id){
+        productRepository.deleteById(id);
+    }
 }

@@ -27,13 +27,4 @@ public class MainController {
         return ResponseEntity.ok(out);
     }
 
-//    @GetMapping("/login")
-//    public String loginPage(){
-//        return "login";
-//    }
-
-
-
-
-
 }

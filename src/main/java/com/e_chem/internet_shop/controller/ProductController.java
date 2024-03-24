@@ -48,4 +48,27 @@ public class ProductController {
                 .created(location)
                 .build();
     }
+    @PutMapping("/{requestedId}")
+    public ResponseEntity<Void> putProduct (@PathVariable Long requestedId, @RequestBody Product product){
+        Optional<Product> byId = productService.getById(requestedId);
+        if (byId.isPresent()){
+            Product productFromDB = byId.get();
+            product.setId(productFromDB.getId());
+            productService.saveNewProduct(product);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct (@PathVariable Long id){
+        Optional<Product> byId = productService.getById(id);
+        if (byId.isPresent()){
+            productService.delete(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+
+    }
 }
