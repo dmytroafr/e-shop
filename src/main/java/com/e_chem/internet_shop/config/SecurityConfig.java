@@ -1,53 +1,48 @@
 package com.e_chem.internet_shop.config;
 
+import com.e_chem.internet_shop.domain.Role;
+import com.e_chem.internet_shop.service.MyUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
 @Configuration
 @EnableWebSecurity()
 public class SecurityConfig {
+    @Autowired
+    MyUserDetailsService userDetailsService;
 
     @Bean
     protected SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         requests -> requests
-//                                .requestMatchers("/products/**")
-//                                .hasRole("ADMIN")
-//                                .authenticated()
-                                .anyRequest().hasRole("ADMIN"))
-                .httpBasic(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
+                                .requestMatchers("/users").authenticated()
+                                .anyRequest().permitAll())
+                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }
-
     @Bean
     PasswordEncoder passwordEncoder (){
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    UserDetailsService uds (PasswordEncoder passwordEncoder){
-
-        User.UserBuilder users = User.builder();
-        UserDetails admin = users
-                .username("admin")
-                .password(passwordEncoder.encode("admin"))
-                .roles("ADMIN") // new role
-                .build();
-
-        return new InMemoryUserDetailsManager(admin);
-
+    public AuthenticationProvider authenticationProvider (){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
     }
 }

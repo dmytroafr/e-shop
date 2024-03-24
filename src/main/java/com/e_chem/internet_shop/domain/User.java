@@ -1,21 +1,22 @@
 package com.e_chem.internet_shop.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
@@ -52,5 +53,6 @@ public class User{
     private List<PhoneNumber> phoneNumberList = new ArrayList<>();
 
     private LocalDateTime created = LocalDateTime.now();
+
 
 }

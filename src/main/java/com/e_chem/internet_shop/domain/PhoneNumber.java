@@ -15,6 +15,4 @@ public class PhoneNumber {
     enum Type{
         HOME, MOBILE, OFFICE
     }
-
-
 }
