@@ -1,6 +1,5 @@
 package com.e_chem.internet_shop.dto;
 
-import jakarta.persistence.Column;
 
 public record ProductDto(
         Long id,

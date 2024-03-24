@@ -1,10 +1,9 @@
 package com.e_chem.internet_shop.controller;
 
 import com.e_chem.internet_shop.domain.Product;
-import com.e_chem.internet_shop.dto.ProductDto;
 import com.e_chem.internet_shop.service.ProductService;
+import com.e_chem.internet_shop.service.ProductServiceImpl;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +16,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    ProductService productService;
-    public ProductController(ProductService productService) {
+    private final ProductService productService;
+    public ProductController(ProductServiceImpl productService) {
         this.productService = productService;
     }
 //    @GetMapping
@@ -58,7 +57,6 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
-
     }
 
     @DeleteMapping("/{id}")

@@ -2,6 +2,7 @@ package com.e_chem.internet_shop.controller;
 
 import com.e_chem.internet_shop.domain.User;
 import com.e_chem.internet_shop.service.UserService;
+import com.e_chem.internet_shop.service.UserServiceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
